@@ -3,7 +3,7 @@ import './App.css'
 import { useDispatch } from 'react-redux'
 import authService from './Appwrite/auth'
 import {login,logout} from './Store/authSlice'
-import {Header,Footer} from './Components/Header'
+import {Header,Footer} from './Components'
 
 function App() {
   // console.log(import.meta.env.VITE_APPWRITE_URL)
