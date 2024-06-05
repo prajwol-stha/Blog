@@ -24,6 +24,7 @@ export default function Post() {
     }, [slug, navigate]);
 
     const deletePost = () => {
+        // console.log('deleting')
         appwriteService.deletePost(post.$id).then((status) => {
             if (status) {
                 appwriteService.deleteFile(post.featuredImage);
@@ -31,6 +32,7 @@ export default function Post() {
             }
         });
     };
+    
 
     return post ? (
         <div className="py-8">
