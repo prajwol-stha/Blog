@@ -13,7 +13,7 @@ const authSlice=createSlice({
         //reducers actions
         login:(state,action)=>{
             state.status=true;
-            userData.userData=action.payload.userData;
+            state.userData=action.payload.userData;
         },
         logout:(state)=>{//no need of actions
             state.status=false;
