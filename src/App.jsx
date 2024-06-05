@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux'
 import authService from './Appwrite/auth'
 import {login,logout} from './Store/authSlice'
 import {Header,Footer} from './Components'
+import { Outlet } from 'react-router-dom'
 
 function App() {
   // console.log(import.meta.env.VITE_APPWRITE_URL)
@@ -28,7 +29,7 @@ function App() {
       <div className='w-full block'>
         <Header/>
       <main>
-        TODO{/* outlet */}
+        TODO: <Outlet/>
       </main>
       <Footer/>
       </div>
