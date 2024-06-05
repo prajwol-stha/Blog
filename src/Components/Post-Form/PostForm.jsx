@@ -1,4 +1,4 @@
-import React,{useCallback} from 'react'
+import React,{useCallback,useEffect} from 'react'
 import { useForm } from 'react-hook-form'
 import {Button,Input,Select,RTE} from '../index'
 import appwriteService from '../../Appwrite/config2'
@@ -19,48 +19,52 @@ export default function PostForm({ post }) {
     const userData = useSelector((state) => state.auth.userData);
 
     const submit = async (data) => {
-        if (post) {
-            const file = data.image[0] ? await appwriteService.uploadFile(data.image[0]) : null;
+        try {
+            let fileId = null;
 
-            if (file) {
-                appwriteService.deleteFile(post.featuredImage);
+            if (data.image && data.image[0]) {
+                const file = await appwriteService.uploadFile(data.image[0]);
+                fileId = file.$id;
+
+                // If updating an existing post and a new image is uploaded, delete the old image
+                if (post && post.featuredImage && fileId) {
+                    await appwriteService.deleteFile(post.featuredImage);
+                }
             }
 
-            const dbPost = await appwriteService.updatePost(post.$id, {
+            const postData = {
                 ...data,
-                featuredImage: file ? file.$id : undefined,
-            });
+                featuredImage: fileId || post?.featuredImage,
+                userId: userData.$id,
+            };
+
+            let dbPost;
+            if (post) {
+                dbPost = await appwriteService.updatePost(post.$id, postData);
+            } else {
+                dbPost = await appwriteService.createPost(postData);
+            }
 
             if (dbPost) {
                 navigate(`/post/${dbPost.$id}`);
             }
-        } else {
-            const file = await appwriteService.uploadFile(data.image[0]);
-
-            if (file) {
-                const fileId = file.$id;
-                data.featuredImage = fileId;
-                const dbPost = await appwriteService.createPost({ ...data, userId: userData.$id });
-
-                if (dbPost) {
-                    navigate(`/post/${dbPost.$id}`);
-                }
-            }
+        } catch (error) {
+            console.error("Error submitting the form:", error);
         }
     };
 
     const slugTransform = useCallback((value) => {
-        if (value && typeof value === "string")
+        if (value && typeof value === "string") {
             return value
                 .trim()
                 .toLowerCase()
                 .replace(/[^a-zA-Z\d\s]+/g, "-")
                 .replace(/\s/g, "-");
-
+        }
         return "";
     }, []);
 
-    React.useEffect(() => {
+    useEffect(() => {
         const subscription = watch((value, { name }) => {
             if (name === "title") {
                 setValue("slug", slugTransform(value.title), { shouldValidate: true });
@@ -98,7 +102,7 @@ export default function PostForm({ post }) {
                     accept="image/png, image/jpg, image/jpeg, image/gif"
                     {...register("image", { required: !post })}
                 />
-                {post && (
+                {post && post.featuredImage && (
                     <div className="w-full mb-4">
                         <img
                             src={appwriteService.getFilePreview(post.featuredImage)}
