@@ -54,21 +54,21 @@ function Login() {
                 label='Email:'
                 placeholder='Enter your mail'
                 type='email'
-                {...register('email'),{
+                {...register('email',{
                     required:true,
                     validate:{
                         matchPattern:(value)=>/[a-z0-9]+[_a-z0-9\.-]*[a-z0-9]+@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})/.test(v) || 
                         "Email address must be valid"
                     }
-                }} //spreading so that it does not overwrite
+                })} //spreading so that it does not overwrite
                 />
                 <Input
                 label='Password:'
                 placeholder='Enter your password'
                 type='password'
-                {...register('passwprd'),{
+                {...register('password',{
                     required:true,
-                }}
+                })}
                 />
                 <Button type='submit'
                 className='w-full'>Sign in</Button>
