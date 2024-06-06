@@ -1,7 +1,7 @@
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+  /* max-width: 1280px; */
+  /* margin: 0 auto; */
+  /* padding: 2rem; */
   text-align: center;
 }
 
@@ -40,3 +40,21 @@
 .read-the-docs {
   color: #888;
 }
+
+.logo-container {
+  width: fit-content;
+  cursor: pointer;
+}
+
+.logo-text {
+  font-family: 'Dancing Script', cursive;
+  font-size: 2rem;
+  padding: 0.5rem;
+  color: white;
+  transition: transform 0.3s ease-in-out;
+}
+
+.logo-text:hover {
+  transform: scale(1.1);
+}
+
